@@ -1,0 +1,10 @@
+
+@import "tailwindcss";
+@import 'swiper/css';
+
+.active{
+    background-color: #198754;
+    color: white ;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
