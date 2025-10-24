@@ -22,7 +22,7 @@ export default function Cart() {
           headers: { token: localStorage.getItem("userToken") },
         }
       )
-      setCartDetails(data)
+      setCartDetails(data.data)
     } catch (err) {
       console.log(err)
     } finally {
@@ -40,7 +40,7 @@ export default function Cart() {
       }
     );
 
-    setCartDetails(data);
+    setCartDetails(data.data);
     toast.success("Item removed 🗑");
 
     if (data?.numOfCartItems !== undefined) {
@@ -61,12 +61,8 @@ async function clearCart() {
       headers: { token: localStorage.getItem("userToken") },
     });
 
-    // ✅ صفّر الحالة بشكل مباشر
     setCartDetails(null);
     setCartCount(0);
-
-    // ❌ متبعتش object لدالة بتاخد رقم
-    // updateCart({ numOfCartItems: 0, data: { products: [] } });
 
     toast("🧺 Your cart has been cleared!", {
       icon: "🧺",
@@ -77,7 +73,6 @@ async function clearCart() {
       },
     });
 
-    // ✅ ارجع بعد ثانية علشان التوست يتعرض
     setTimeout(() => navigate("/"), 1000);
   } catch (err) {
     console.log(err);
@@ -98,12 +93,12 @@ async function clearCart() {
           headers: { token: localStorage.getItem("userToken") },
         }
       )
-      setCartDetails(data)
+      setCartDetails(data.data)
       
       if (data?.numOfCartItems !== undefined) {
         setCartCount(data.numOfCartItems);
       }
-      updateCart(data);
+      updateCart(data.data);
 
       toast.success("Cart updated 🛺")
     } catch (err) {
@@ -117,7 +112,7 @@ async function clearCart() {
     getCart()
   }, [])
 
-  const productsArray = cartDetails?.data?.products || []
+  const productsArray = cartDetails?.products || []
 
   return (
     <div className="mt-10 gap-5 p-6">
@@ -137,18 +132,17 @@ async function clearCart() {
           <p className="text-lg font-medium">
             Total Price:{" "}
             <span className="text-green-600 font-semibold">
-              {cartDetails?.data?.totalCartPrice ?? 0} EGP
+              {cartDetails?.totalCartPrice ?? 0} EGP
             </span>
           </p>
           <p className="text-lg font-medium md:text-right">
             Total Items:{" "}
             <span className="text-green-600 font-semibold">
-              {cartDetails?.numOfCartItems ?? 0}
+              {cartDetails ? productsArray.length : 0}
             </span>
           </p>
         </div>
 
-        {/* Loading */}
         {productsArray.length > 0 && (
           productsArray.map((item, idx) => {
             const p = item.product;
@@ -157,7 +151,6 @@ async function clearCart() {
                 key={p._id || idx}
                 className="flex flex-col sm:flex-row justify-between items-center sm:items-center rounded-2xl p-6 bg-white shadow-sm mb-4"
               >
-                {/* Product Image + Info */}
                 <div className="flex flex-col sm:flex-row justify-center sm:justify-start w-full sm:w-auto">
                   <img
                     src={p.imageCover || img}
@@ -183,7 +176,6 @@ async function clearCart() {
                   </div>
                 </div>
 
-                {/* Quantity */}
                 <div className="flex sm:flex-row flex-col items-center justify-between sm:justify-center  gap-2 mt-4 sm:mt-0 w-full sm:w-auto">
                   <div className="flex items-center justify-center   gap-2 w-full sm:w-auto">
                     <button
