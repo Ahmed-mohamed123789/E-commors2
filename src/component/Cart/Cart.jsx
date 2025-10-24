@@ -30,7 +30,7 @@ export default function Cart() {
     }
   }
 
- async function removeItem(id) {
+async function removeItem(id) {
   setLoading(true);
   try {
     const { data } = await axios.delete(
@@ -43,15 +43,41 @@ export default function Cart() {
     setCartDetails(data.data);
     toast.success("Item removed 🗑");
 
-    if (data?.numOfCartItems !== undefined) {
-      setCartCount(data.numOfCartItems);
-    }
+    const count = Number(data?.data?.products?.length ?? 0);
+    setCartCount(count);
+
   } catch (err) {
     console.log(err);
   } finally {
     setLoading(false);
   }
 }
+
+async function updateCount(productId, newCount) {
+  setLoading(true);
+  try {
+    if (newCount < 1) {
+      return removeItem(productId);
+    }
+
+    const { data } = await axios.put(
+      `https://ecommerce.routemisr.com/api/v1/cart/${productId}`,
+      { count: newCount },
+      {
+        headers: { token: localStorage.getItem("userToken") },
+      }
+    );
+
+    setCartDetails(data.data);
+
+    toast.success("Cart updated 🛺");
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setLoading(false);
+  }
+}
+
 
 
 async function clearCart() {
@@ -82,31 +108,7 @@ async function clearCart() {
 }
 
 
-  async function updateCount(productId, newCount) {
-    setLoading(true)
-    try {
-      if (newCount < 1) return removeItem(productId) 
-      const { data } = await axios.put(
-        `https://ecommerce.routemisr.com/api/v1/cart/${productId}`,
-        { count: newCount },
-        {
-          headers: { token: localStorage.getItem("userToken") },
-        }
-      )
-      setCartDetails(data.data)
-      
-      if (data?.numOfCartItems !== undefined) {
-        setCartCount(data.numOfCartItems);
-      }
-      updateCart(data.data);
 
-      toast.success("Cart updated 🛺")
-    } catch (err) {
-      console.log(err)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   useEffect(() => {
     getCart()
