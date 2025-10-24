@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext } from "react"
 import img from "../../assets/img3.png"
 import toast from "react-hot-toast"
 import { useLoading } from "../../Context/LoadingContext"
-import { useNavigate } from "react-router-dom"
+import { Link, Outlet, useNavigate } from "react-router-dom"
 import { CartContext } from "../../CartContext/CartContext"
 
 export default function Cart() {
@@ -121,12 +121,16 @@ async function clearCart() {
 
   return (
     <div className="mt-10 gap-5 p-6">
-      <div className=" bg-gray-50 rounded-2xl w-full p-5 grid">
+      <div className=" bg-gray-50 rounded-2xl w-full p-0 md:p-5">
         <div className="flex justify-between items-center pb-4">
           <h1 className="text-4xl font-bold text-gray-800">Cart Shop</h1>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white text-xl px-3 py-2 rounded-lg font-semibold transition">
+
+          <Link to="/chekOut">
+          <button className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white text-xl px-3 py-2 rounded-lg font-semibold transition">
             Check Out
           </button>
+          </Link>
+
         </div>
 
         <div className="flex items-center justify-between text-center md:text-left mb-5">
@@ -145,11 +149,7 @@ async function clearCart() {
         </div>
 
         {/* Loading */}
-        {productsArray.length === 0 ? (
-          <p className="text-center text-gray-500 text-xl font-medium">
-            Your cart is empty 🛒
-          </p>
-        ) : (
+        {productsArray.length > 0 && (
           productsArray.map((item, idx) => {
             const p = item.product;
             return (
@@ -169,7 +169,8 @@ async function clearCart() {
                     <h2 className="text-xl font-semibold text-gray-800 mb-2">
                       {p.title}
                     </h2>
-                    <p className="text-gray-600 font-medium mb-2">
+<div className="flex justify-between sm:flex-col sm:items-start mt-2.5 mb-3">
+                      <p className="text-gray-600 font-medium mb-2">
                       {(item.price ?? p.price ?? 0)} EGP
                     </p>
                     <button
@@ -178,6 +179,7 @@ async function clearCart() {
                     >
                       🗑 Remove
                     </button>
+</div>
                   </div>
                 </div>
 

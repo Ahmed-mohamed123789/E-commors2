@@ -64,6 +64,15 @@ export default function NavHome() {
                 Cart
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="wishList"
+                onClick={() => setIsOpen(false)}
+                className="block relative text-[15px] font-normal py-2 text-[#323232] hover:text-[#000000]"
+              >
+                wish list
+              </NavLink>
+            </li>
 
             <li>
               <NavLink
@@ -96,7 +105,6 @@ export default function NavHome() {
             </li>
           </ul>
 
-          {/* 🔹 الموبايل: الأيقونة والـ Logout جوه القائمة */}
           <div className="flex flex-col items-center justify-center mt-5 space-y-4 md:hidden">
             <Link to="/cart" onClick={() => setIsOpen(false)} className="relative">
               <FontAwesomeIcon
@@ -118,7 +126,6 @@ export default function NavHome() {
           </div>
         </div>
 
-        {/* 🔹 الديسكتوب: الأيقونة والـ Logout في اليمين */}
         <div className="hidden md:flex md:order-2 items-center">
           <div className="relative mr-4">
             <Link to="/cart" className="relative">

@@ -11,9 +11,13 @@ import "swiper/css/pagination";
 import { CartContext } from "../../CartContext/CartContext"; // ✅ استيراد الكونتكست
 
 export default function ProductDetails() {
+  const [wishListIds, setWishListIds] = useState(
+    JSON.parse(localStorage.getItem("wishListIds")) || []
+  );
   const { id } = useParams();
   const { setLoading } = useLoading();
   const { setCartCount, updateCart } = useContext(CartContext); // ✅ استخدام الكونتكست
+const [loadingId, setLoadingId] = useState(null)
 
   const [productsDetails, setProductsDetails] = useState(null);
   const [addingId, setAddingId] = useState(null);
@@ -32,8 +36,63 @@ export default function ProductDetails() {
     }
   }
 
+  async function wishList(prI) {
+  setLoadingId(prI);
+  try {
+    if (wishListIds.includes(prI)) {
+      // ✅ لو المنتج موجود بالفعل → نحذفه
+      await axios.delete(`https://ecommerce.routemisr.com/api/v1/wishlist/${prI}`, {
+        headers: { token: localStorage.getItem("userToken") },
+      });
+
+      const updatedIds = wishListIds.filter((id) => id !== prI);
+      setWishListIds(updatedIds);
+      localStorage.setItem("wishListIds", JSON.stringify(updatedIds)); // ← الخطوة التالتة هنا
+
+      toast("تم الحذف من المفضلة 💔", {
+        icon: "🗑️",
+      });
+    } else {
+      // ✅ لو المنتج مش موجود → نضيفه
+      await axios.post(
+        "https://ecommerce.routemisr.com/api/v1/wishlist",
+        { productId: prI },
+        { headers: { token: localStorage.getItem("userToken") } }
+      );
+
+      const updatedIds = [...wishListIds, prI];
+      setWishListIds(updatedIds);
+      localStorage.setItem("wishListIds", JSON.stringify(updatedIds)); // ← والخطوة دي برضو هنا
+
+      toast.success("تمت الإضافة إلى المفضلة ❤️");
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error("حدث خطأ أثناء العملية 😔");
+  } finally {
+    setLoadingId(null);
+  }
+}
+
+  async function getWishList() {
+  try {
+    const { data } = await axios.get(
+      "https://ecommerce.routemisr.com/api/v1/wishlist",
+      { headers: { token: localStorage.getItem("userToken") } }
+    );
+    setWishListIds(data.data.map((item) => item._id)); // نخزن بس الـ IDs
+    localStorage.setItem("wishListIds", JSON.stringify(data.data.map((item) => item._id)));
+
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+
   useEffect(() => {
     getProductsDetails();
+            getWishList()
+
   }, [id]);
 
   const images = [
@@ -111,7 +170,6 @@ export default function ProductDetails() {
                 ))}
               </Swiper>
 
-              {/* ✅ مكان النقط تحت الصورة */}
               <div className="custom-pagination absolute bottom-2 left-0 right-0 flex justify-center z-10"></div>
             </div>
           </div>
@@ -165,7 +223,48 @@ export default function ProductDetails() {
                 )}
               </button>
 
-              <FaHeart className="text-4xl text-[#1f513b]" />
+
+<div
+  onClick={(e) => {
+    e.preventDefault();
+    if (loadingId === productsDetails._id) return;
+    wishList(productsDetails._id);
+  }}
+  className="flex justify-end text-2xl transition-colors duration-200 mb-3"
+>
+  {loadingId === productsDetails._id ? (
+    <svg
+      className="animate-spin h-5 w-5 text-[#4fa782]"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      ></circle>
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 11-8 8z"
+      ></path>
+    </svg>
+  ) : (
+    <FaHeart
+      className={`cursor-pointer transition-colors duration-300 ${
+        wishListIds.includes(productsDetails._id)
+          ? "text-red-500"
+          : "text-[#1f513b] hover:text-red-400"
+      }`}
+    />
+  )}
+</div>
+
+
             </div>
           </div>
         </div>

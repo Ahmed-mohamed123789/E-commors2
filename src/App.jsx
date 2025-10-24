@@ -17,6 +17,8 @@ import { LoadingProvider } from './Context/LoadingContext'
 import ForgPass from './component/ForgPass/ForgPass'
 import Verify from './component/Verify/Verify'
 import ResPass from './component/ResPass/ResPass'
+import WishList from './component/WishList/WishList'
+import CheckOut from './component/CheckOut/CheckOut'
 
 const queryClient = new QueryClient();
 
@@ -41,6 +43,8 @@ const router = createBrowserRouter([
       { path: "categories", element: <Categories /> },
       { path: "brands", element: <Brands /> },
       { path: "cart", element: <Cart /> },
+      { path: "chekOut", element: <CheckOut /> },
+      { path: "wishList", element: <WishList /> },
     ],
   },
 ]);
