@@ -122,11 +122,29 @@ async function clearCart() {
         <div className="flex justify-between items-center pb-4">
           <h1 className="text-4xl font-bold text-gray-800">Cart Shop</h1>
 
-          <Link to="/chekOut">
-          <button className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white text-xl px-3 py-2 rounded-lg font-semibold transition">
-            Check Out
-          </button>
-          </Link>
+<button
+  onClick={() => {
+    if (!cartDetails || !cartDetails.products?.length) {
+      toast.error(" Cart is empty!", {
+  style: {
+    border: "1px solid #ff4d4f",
+    marginTop:"25px",
+    padding: "12px 18px",
+    color: "#fff",
+    background: "#dc2626", 
+    fontWeight: "600",
+    fontSize: "16px",
+    borderRadius: "8px",
+  }
+  });
+      return;
+    }
+    navigate("/chekOut");
+  }}
+  className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white text-xl px-3 py-2 rounded-lg font-semibold transition"
+>
+  Check Out
+</button>
 
         </div>
 
