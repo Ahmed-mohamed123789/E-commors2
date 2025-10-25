@@ -6,7 +6,10 @@ import Slider from "react-slick";
 import { useLoading } from "../../Context/LoadingContext";
 import toast from "react-hot-toast";
 import { CartContext } from "../../CartContext/CartContext"; // ✅ import الكارت context
-
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/autoplay";
 export default function Home() {
 const [wishListIds, setWishListIds] = useState(
   JSON.parse(localStorage.getItem("wishListIds")) || []
@@ -21,18 +24,6 @@ const [hoveredId, setHoveredId] = useState(null); // ضيفها فوق مع با
   const [Categories, setCategories] = useState([]);
   const [addingId, setAddingId] = useState(null);
 const [loadingId, setLoadingId] = useState(null)
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 7,
-    slidesToScroll: 3,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 4 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } },
-    ],
-  };
 
   async function getProducts() {
     setLoading(true);
@@ -176,10 +167,27 @@ async function addProduct(prI) {
 
   return (
     <>
-      <div className="relative full w-full grid grid-cols-1 md:grid-cols-1 overflow-hidden mt-40 mb-10 px-2 sm:px-4">
-        <Slider {...settings}>
-          {Categories.map((c) => (
-            <div key={c._id} className="px-3">
+
+      <div className="relative w-full overflow-hidden mt-40 mb-10 px-2 sm:px-4">
+      <Swiper
+        modules={[Autoplay]}
+        spaceBetween={0} 
+        loop={true}
+        autoplay={{
+          delay: 1500,
+          disableOnInteraction: false,
+        }}
+        breakpoints={{
+          1280: { slidesPerView: 5 },
+          1024: { slidesPerView: 4 },
+          768: { slidesPerView: 2 },
+          480: { slidesPerView: 1 },
+        }}
+        className="w-full"
+      >
+        {Categories.map((c) => (
+          <SwiperSlide key={c._id}>
+            <div className="px-2">
               <img
                 src={c.image}
                 alt={c.name}
@@ -189,9 +197,13 @@ async function addProduct(prI) {
                 {c.name}
               </h3>
             </div>
-          ))}
-        </Slider>
-      </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+
+
+
 
       <form className="max-w-5xl mx-auto w-full">
         <div className="w-full">
