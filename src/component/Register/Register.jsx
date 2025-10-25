@@ -18,7 +18,7 @@ async function handleSubmit(value) {
       "https://ecommerce.routemisr.com/api/v1/auth/signup",
       value
     );
-    localStorage.setItem("userInfo", JSON.stringify(value));
+localStorage.setItem("userInfo", JSON.stringify(data));
 
       navigate("/home")
   } catch (err) {
