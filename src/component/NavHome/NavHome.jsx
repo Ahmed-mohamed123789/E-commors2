@@ -18,7 +18,7 @@ export default function NavHome() {
     <nav className="bg-[#f8f9fa] shadow fixed w-full z-20 top-0 start-0 ">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* 🔹 اللوجو */}
-        <a href="#" className="flex items-center rtl:space-x-reverse">
+       <Link to={"/"} className="flex items-center rtl:space-x-reverse">
           <FontAwesomeIcon
             icon={faCartShopping}
             className="nav-icon text-[#4fa74f] text-4xl"
@@ -26,7 +26,7 @@ export default function NavHome() {
           <span className="self-center text-3xl text-black font-semibold whitespace-nowrap">
             fresh cart
           </span>
-        </a>
+        </Link>
 
         {/* 🔹 زرار التوجل */}
         <button
