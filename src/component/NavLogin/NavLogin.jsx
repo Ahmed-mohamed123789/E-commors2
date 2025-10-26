@@ -69,7 +69,7 @@ export default function NavLogin() {
               </li>
               <li>
                 <NavLink
-                  to="/home"
+                  to="/"
                   onClick={handleClose}
                   className="block py-2 md:p-0 text-[#000000a6] px-3 rounded-sm hover:text-[#000000db]"
                 >
