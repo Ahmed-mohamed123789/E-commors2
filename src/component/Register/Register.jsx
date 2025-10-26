@@ -20,7 +20,7 @@ async function handleSubmit(value) {
     );
 localStorage.setItem("userInfo", JSON.stringify(data));
 
-      navigate("/")
+      navigate("/home")
   } catch (err) {
     console.log(" Error:", err.response?.data || err.message);
     setErrmasg(err.response?.data?.message)
